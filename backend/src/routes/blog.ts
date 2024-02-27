@@ -3,14 +3,18 @@ import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 import { verify } from "hono/jwt";
 
+type Bindings = {
+  DATABASE_URL: string;
+  SECRET_KEY: string;
+};
+
+type Variables = {
+  userId: string;
+};
+
 export const blogRouter = new Hono<{
-  Bindings: {
-    DATABASE_URL: string;
-    SECRET_KEY: string;
-  };
-  Variables: {
-    userId: string;
-  };
+  Bindings: Bindings;
+  Variables: Variables;
 }>();
 
 blogRouter.use(async (c, next) => {

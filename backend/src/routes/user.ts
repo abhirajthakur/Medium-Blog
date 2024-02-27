@@ -3,12 +3,12 @@ import { withAccelerate } from "@prisma/extension-accelerate";
 import { Hono } from "hono";
 import { sign } from "hono/jwt";
 
-export const userRouter = new Hono<{
-  Bindings: {
-    DATABASE_URL: string;
-    SECRET_KEY: string;
-  };
-}>();
+type Bindings = {
+  DATABASE_URL: string;
+  SECRET_KEY: string;
+};
+
+export const userRouter = new Hono<{ Bindings: Bindings }>();
 
 async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder();
