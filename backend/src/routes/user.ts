@@ -29,18 +29,6 @@ userRouter.post("/signup", async (c) => {
   }).$extends(withAccelerate());
 
   const body = await c.req.json();
-
-  const existingUser = await prisma.user.findUnique({
-    where: {
-      email: body.email,
-    },
-  });
-
-  if (existingUser) {
-    c.status(411);
-    return c.json({ error: "User already exists" });
-  }
-
   const passwordHash = await hashPassword(body.password);
 
   try {
@@ -53,7 +41,11 @@ userRouter.post("/signup", async (c) => {
     });
     const token = await sign({ id: user.id }, c.env.SECRET_KEY);
     return c.json({ token: token });
-  } catch (e) {
+  } catch (e: any) {
+    if (e.code === "P2002") {
+      c.status(409);
+      return c.json({ error: "User already exists" });
+    }
     c.status(403);
     return c.json({ error: "Error while signing up" });
   }
