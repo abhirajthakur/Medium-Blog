@@ -17,7 +17,7 @@ export const blogRouter = new Hono<{
   Variables: Variables;
 }>();
 
-blogRouter.use(async (c, next) => {
+blogRouter.use("/*", async (c, next) => {
   const authHeader = c.req.header("Authorization");
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     c.status(401);
@@ -81,6 +81,33 @@ blogRouter.put("/", async (c) => {
   }
 });
 
+blogRouter.get("/bulk", async (c) => {
+  const prisma = new PrismaClient({
+    datasourceUrl: c.env?.DATABASE_URL,
+  }).$extends(withAccelerate());
+
+  let page = Number(c.req.query("page")) || 1;
+  let pageSize = Number(c.req.query("pageSize")) || 10;
+
+  const skip = (page - 1) * pageSize;
+
+  try {
+    const posts = await prisma.post.findMany({
+      skip: skip,
+      take: pageSize,
+      where: {
+        published: true,
+      },
+    });
+
+    return c.json({ posts: posts });
+  } catch (e) {
+    console.log(e);
+    c.status(403);
+    return c.json({ error: "Blogs not found" });
+  }
+});
+
 blogRouter.get("/:id", async (c) => {
   const prisma = new PrismaClient({
     datasourceUrl: c.env?.DATABASE_URL,
@@ -88,16 +115,15 @@ blogRouter.get("/:id", async (c) => {
 
   const id = c.req.param("id");
 
-  const post = await prisma.post.findUnique({
-    where: {
-      id: id,
-    },
-  });
-
-  if (!post) {
+  try {
+    const post = await prisma.post.findFirst({
+      where: {
+        id: id,
+      },
+    });
+    return c.json(post);
+  } catch (e) {
     c.status(403);
     return c.json({ error: "Blog not found" });
   }
-
-  return c.json(post);
 });
