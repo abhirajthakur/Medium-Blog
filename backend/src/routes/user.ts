@@ -47,7 +47,7 @@ userRouter.post("/signup", async (c) => {
       },
     });
     const token = await sign({ id: user.id }, c.env.SECRET_KEY);
-    return c.json({ token: token });
+    return c.json({ token: token, name: body.name });
   } catch (e: any) {
     if (e.code === "P2002") {
       c.status(409);
@@ -86,7 +86,7 @@ userRouter.post("/signin", async (c) => {
     }
 
     const token = await sign({ id: user.id }, c.env.SECRET_KEY);
-    return c.json({ token: token });
+    return c.json({ token: token, name: user.name });
   } catch (err) {
     c.status(411);
     return c.json({ error: "Invalid" });
