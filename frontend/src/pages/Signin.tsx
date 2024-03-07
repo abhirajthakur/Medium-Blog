@@ -4,7 +4,6 @@ import { Report } from "notiflix/build/notiflix-report-aio";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { Quote } from "../components/Quote";
-import { BACKEND_URL } from "../config";
 
 export const Signin = () => {
   const navigate = useNavigate();
@@ -13,11 +12,12 @@ export const Signin = () => {
   const sendSigninRequest: SubmitHandler<SigninInput> = async (data) => {
     try {
       const response = await axios.post(
-        `${BACKEND_URL}/api/v1/user/signin`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/user/signin`,
         data,
       );
 
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("name", response.data.name);
       navigate("/blogs");
     } catch (e) {
       if (e instanceof AxiosError && e.response) {

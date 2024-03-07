@@ -1,13 +1,13 @@
 export const Avatar = ({ name }: { name: string }) => {
   const getInitials = () => {
     const names = name.split(" ");
-    const initials = names[0].substring(0, 1).toUpperCase();
+    let initials = names[0].substring(0, 1).toUpperCase();
 
     if (names.length > 1) {
       const lastNameInitial = names[names.length - 1]
         .substring(0, 1)
         .toUpperCase();
-      initials.concat(lastNameInitial);
+      initials += lastNameInitial;
     }
 
     return initials;
