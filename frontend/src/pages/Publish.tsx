@@ -7,7 +7,7 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import axios from "axios";
 import { EditorState } from "lexical";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import EditorTheme from "../plugins/EditorTheme";
 import ToolbarPlugin from "../plugins/ToolbarPlugin";
@@ -96,6 +96,13 @@ export const Publish = () => {
           >
             Publish Post
           </button>
+          <Link
+            to={"/blogs"}
+            type="button"
+            className="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:outline-none shadow-md shadow-red-500/50 font-medium rounded-lg text-sm px-4 py-2 text-center ml-3"
+          >
+            Cancel
+          </Link>
         </div>
       </LexicalComposer>
     </div>

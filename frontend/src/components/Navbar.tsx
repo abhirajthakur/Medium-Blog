@@ -3,7 +3,7 @@ import { Avatar } from "./Avatar";
 
 export const Navbar = () => {
   return (
-    <header className="sticky border-b flex h-16 w-full items-center px-6 md:px-8">
+    <header className="sticky top-0 bg-white shadow-md flex h-16 w-full items-center px-6 md:px-8">
       <div className="flex w-full items-center py-2 text-lg font-semibold">
         <Link to={"/blogs"}>Medium</Link>
       </div>
